@@ -72,7 +72,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         (resource, id) = self.parse_url(self.path)
 
-        if resource == "entry":
+        if resource == "entries":
             response = f"{get_all_entries()}"
 
         # Your new console.log() that outputs to the terminal
@@ -96,10 +96,10 @@ class HandleRequests(BaseHTTPRequestHandler):
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
 
-    def do_PUT(self):
-        """Handles PUT requests to the server
-        """
-        self.do_POST()
+#    def do_PUT(self):
+#        """Handles PUT requests to the server
+#        """
+#        self.do_POST()
 #set a 204 response code. This is not going to return anything from server except a 204 response saying the action was performed
 
 # This function is not inside the class. It is the starting
