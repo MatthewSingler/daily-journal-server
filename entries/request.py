@@ -12,7 +12,7 @@ def get_all_entries():
         e.text,
         e.date,
         e.mood_id
-        FROM entry e
+        FROM entries e
         """)
         entries = []
         dataset = db_cursor.fetchall()

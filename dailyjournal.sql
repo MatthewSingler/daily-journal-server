@@ -1,8 +1,9 @@
+
 CREATE TABLE `Entries` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     `concept` TEXT NOT NULL,
-    `entry text` TEXT NOT NULL,
-    `entry date` TEXT NOT NULL,
+    `text` TEXT NOT NULL,
+    `date` TEXT NOT NULL,
     `mood_id` INTEGER NOT NULL,
     FOREIGN KEY(`mood_id`) REFERENCES `Mood`(`id`)
 );
