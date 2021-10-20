@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from entries.request import get_all_entries
+from entries.request import get_all_entries, get_single_entry
 
 
 # Here's a class. It inherits from another class.
@@ -20,19 +20,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         # at index 2.
         path_params = path.split("/")
         resource = path_params[1]
-        id = None
-
-        # Try to get the item at index 2
-        try:
-            # Convert the string "1" to the integer 1
-            # This is the new parseInt()
-            id = int(path_params[2])
-        except IndexError:
-            pass  # No route parameter exists: /animals
-        except ValueError:
-            pass  # Request had trailing slash: /animals/
-
-        return (resource, id)  # This is a tuple
+        if "?" in resource:
+            param  = resource.split("?")[1]
+            resource = resource.split("?")[0]
+            pair = param.split("=")
+            key = pair[0]
+            value = pair[1]
+            return (resource, key, value)
+        else:
+            id = None
+            try:
+                id = int(path_params[2])
+            except IndexError:
+                pass
+            except ValueError:
+                pass
+            return (resource, id)
 
     # Here's a class function
 
@@ -69,11 +72,16 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Set the response code to 'Ok'
         self._set_headers(200)
         response = {}
+        parsed = self.parse_url(self.path)
 
-        (resource, id) = self.parse_url(self.path)
+        if len(parsed) == 2:
+            (resource, id) = parsed
 
         if resource == "entries":
-            response = f"{get_all_entries()}"
+            if id is not None:
+                response = f"{get_single_entry(id)}"
+            else:
+                response = f"{get_all_entries()}"
 
         # Your new console.log() that outputs to the terminal
         #print(self.path)
