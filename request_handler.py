@@ -82,7 +82,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = f"{get_single_entry(id)}"
             else:
                 response = f"{get_all_entries()}"
-
+                
         # Your new console.log() that outputs to the terminal
         #print(self.path)
 

@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Entry
+from models import Entry, Mood
 def get_all_entries():
     with sqlite3.connect("./dailyjournal.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -31,13 +31,19 @@ def get_single_entry(id):
         e.concept,
         e.text,
         e.date,
-        e.mood_id
+        e.mood_id,
+        m.mood_type,
+        m.id mood_id
         FROM Entries e
+        JOIN Moods m
+        ON m.id = e.mood_id
         WHERE e.id = ?
         """, (id, ))
 
         data = db_cursor.fetchone()
         entry = Entry(data["id"], data["concept"], data["text"], data["date"], data["mood_id"])
+        mood = Mood(data["mood_id"], data["mood_type"])
+        entry.mood = mood.__dict__
     return json.dumps(entry.__dict__)
 
 def delete_entry(id):
