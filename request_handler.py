@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from entries.request import delete_entry, get_all_entries, get_single_entry
+from entries.request import create_journal_entry, delete_entry, get_all_entries, get_single_entry
 
 
 # Here's a class. It inherits from another class.
@@ -109,6 +109,21 @@ class HandleRequests(BaseHTTPRequestHandler):
 #        """
 #        self.do_POST()
 #set a 204 response code. This is not going to return anything from server except a 204 response saying the action was performed
+    
+    def do_POST(self):
+        """Handles POST requests to the server
+        """
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+
+        new_entry = None
+        if resource == "entries":
+            new_entry = create_journal_entry(post_body)
+            self.wfile.write(f"{new_entry}".encode())
+
     def do_DELETE(self):
         self._set_headers(204)
         (resource, id) = self.parse_url(self.path)
@@ -123,7 +138,6 @@ def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
-
 
 if __name__ == "__main__":
     main()
