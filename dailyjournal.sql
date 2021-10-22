@@ -24,3 +24,13 @@ INSERT INTO `Moods` VALUES (null, 'Bleak');
 INSERT INTO `Moods` VALUES (null, 'Proud');
 INSERT INTO `Moods` VALUES (null, 'Optomistic');
 
+SELECT
+        e.id,
+        e.concept,
+        e.text,
+        e.date,
+        e.mood_id,
+        m.mood_type
+        FROM Entries e
+        JOIN Moods m
+        ON m.id = e.mood_id
