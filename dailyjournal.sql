@@ -34,3 +34,17 @@ SELECT
         FROM Entries e
         JOIN Moods m
         ON m.id = e.mood_id
+
+CREATE TABLE `Tags` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL
+);
+
+CREATE TABLE `entry_tag` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `entry_id` TEXT NOT NULL
+    `tag_id` TEXT NOT NULL
+    FOREIGN KEY(`tage_id`) REFERENCES `Tag`(`id`)
+    FOREIGN KEY(`entry_id`) REFERENCES `Entry`(`id`)
+);
+
