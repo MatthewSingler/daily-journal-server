@@ -11,13 +11,18 @@ def get_all_entries():
         e.concept,
         e.text,
         e.date,
-        e.mood_id
-        FROM entries e
+        e.mood_id,
+        m.mood_type
+        FROM Entries e
+        JOIN Moods m
+        ON m.id = e.mood_id
         """)
         entries = []
         dataset = db_cursor.fetchall()
         for row in dataset:
             entry = Entry(row["id"], row["concept"], row["text"], row["date"], row["mood_id"])
+            mood = Mood(row["mood_id"], row["mood_type"])
+            entry.mood = mood.__dict__
             entries.append(entry.__dict__)
     return json.dumps(entries)
 
