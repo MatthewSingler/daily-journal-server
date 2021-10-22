@@ -1,6 +1,44 @@
 import sqlite3
 import json
 from models import Entry, Mood
+
+
+def parse_url(self, path):
+    path_params = path.split("/")
+    resource = path_params[1]
+    if "?" in resource:
+        param = resource.split("?")[1]  
+        resource = resource.split("?")[0] 
+        pair = param.split("=")
+        key = pair[0]
+        value = pair[1]
+
+        return (resource, key, value)
+    else:
+            id = None
+            try:
+                id = int(path_params[2])
+            except IndexError:
+                pass
+            except ValueError:
+                pass
+            return (resource, id)
+
+def _set_headers(self, status):
+    self.send_response(status)
+    self.send_header('Content-type', 'application/json')
+    self.send_header('Access-Control-Allow-Origin', '*')
+    self.end_headers()
+
+def do_OPTIONS(self):
+    self.send_response(200)
+    self.send_header('Access-Control-Allow-Origin', '*')
+    self.send_header('Access-Control-Allow-Methods',
+                         'GET, POST, PUT, DELETE')
+    self.send_header('Access-Control-Allow-Headers',
+                         'X-Requested-With, Content-Type, Accept')
+    self.end_headers()
+
 def get_all_entries():
     with sqlite3.connect("./dailyjournal.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -57,10 +95,10 @@ def create_journal_entry(new_entry):
         db_cursor = conn.cursor()
         db_cursor.execute("""
         INSERT INTO Entries
-            (id, concept, text, date, mood_id)
+            (concept, text, date, mood_id)
         VALUES
-            (?, ?, ?, ?, ?);
-        """, (new_entry["id"], new_entry["concept"], new_entry["text"], new_entry["date"], new_entry["mood_id"]))
+            (?, ?, ?, ?);
+        """, (new_entry["concept"], new_entry["text"], new_entry["date"], new_entry["mood_id"],))
         id = db_cursor.lastrowid
         new_entry["id"] = id
     return json.dumps(new_entry)
