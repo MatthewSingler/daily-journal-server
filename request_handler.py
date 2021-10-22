@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from entries.request import create_journal_entry, delete_entry, get_all_entries, get_single_entry
+from entries.request import create_journal_entry, delete_entry, get_all_entries, get_single_entry, update_entry
 
 
 # Here's a class. It inherits from another class.
@@ -123,6 +123,19 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "entries":
             new_entry = create_journal_entry(post_body)
             self.wfile.write(f"{new_entry}".encode())
+
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+        if resource == "entries":
+            success = update_entry(id, post_body)
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         self._set_headers(204)

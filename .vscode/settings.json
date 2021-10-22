@@ -3,8 +3,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "Daily Journal",
-            "database": "dailyjournal.db"
+            "name": "New Journal",
+            "database": "newdailyjournal.db"
         }
     ]
 }
